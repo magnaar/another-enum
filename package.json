@@ -1,0 +1,22 @@
+{
+  "name": "simple-enum",
+  "version": "0.0.1",
+  "description": "A simple enum module, nothing more",
+  "main": "simple-enum.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "keywords": [
+    "enum"
+  ],
+  "author": "Magnaar",
+  "license": "MIT",
+  "ava": {
+    "files": [
+      "test/*.test.js"
+    ]
+  },
+  "devDependencies": {
+    "ava": "^0.19.1"
+  }
+}
