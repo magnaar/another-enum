@@ -50,6 +50,24 @@ Colors.RED ==/= 0
 Colors.BLUE ==/= OtherColors.BLUE
 ```
 
+###**Switch case**
+```
+switch (color)
+{
+    case Colors.RED:
+        console.log("The color is red.")
+        break
+    case Colors.GREEN:
+        console.log("The color is green.")
+        break
+    case Colors.BLUE:
+        console.log("The color is blue.")
+        break
+    default:
+        console.log("The color is weird.")
+}
+```
+
 ###**Enum**
 ####**get**(_value_)
 ```
@@ -81,10 +99,10 @@ for (const color of Colors)
     // | BLUE
     ;
 for (const color in Colors)
-    // color : EnumValue
-    // | RED
-    // | GREEN
-    // | BLUE
+    // color : string
+    // | "RED"
+    // | "GREEN"
+    // | "BLUE"
     ;
 ```
 

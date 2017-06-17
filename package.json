@@ -18,5 +18,13 @@
   },
   "devDependencies": {
     "ava": "^0.19.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magnaar/simple-enum.git"
+  },
+  "bugs": {
+    "url": "https://github.com/magnaar/simple-enum/issues"
+  },
+  "homepage": "https://github.com/magnaar/simple-enum#readme"
 }

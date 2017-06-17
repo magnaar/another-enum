@@ -135,3 +135,24 @@ test("Weird test", t => {
     t.is(Colors.BLUE.toString(), "Colors.BLUE(#0000FF)")
     t.is(Colors.get("#00FF00").longName, "Colors.GREEN")
 })
+
+test("Switch case", t => {
+    const Colors = Enum.Colors("RED", "GREEN", "BLUE")
+    t.plan(3)
+    let i = 0
+    for (const color of Colors)
+        switch (color)
+        {
+            case Colors.RED:
+                t.is(i++, 0)
+                break
+            case Colors.GREEN:
+                t.is(i++, 1)
+                break
+            case Colors.BLUE:
+                t.is(i++, 2)
+                break
+            default:
+                t.fail()
+        }
+})
