@@ -1,17 +1,17 @@
-**simple-enum** 0.0.1
+**another-enum** 0.0.1
 =================
-###_A simple enum module, nothing more_
+###_Another simple enum module, nothing more_
 
 ##**Install**
 ```
-npm install simple-enum
+npm install another-enum
 ```
 
 ##**How does it work ?**
 ###**Import**
 ```
-import { Enum } from "simple-enum"
-const Enum = require("simple-enum").Enum
+import { Enum } from "another-enum"
+const Enum = require("another-enum").Enum
 ```
 
 ###**Instantiate your Enum**

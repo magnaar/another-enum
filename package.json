@@ -1,8 +1,8 @@
 {
-  "name": "simple-enum",
+  "name": "another-enum",
   "version": "0.0.1",
-  "description": "A simple enum module, nothing more",
-  "main": "simple-enum.js",
+  "description": "Another simple enum module, nothing more",
+  "main": "another-enum.js",
   "scripts": {
     "test": "ava"
   },
@@ -21,10 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/magnaar/simple-enum.git"
+    "url": "git+https://github.com/magnaar/another-enum.git"
   },
   "bugs": {
-    "url": "https://github.com/magnaar/simple-enum/issues"
+    "url": "https://github.com/magnaar/another-enum/issues"
   },
-  "homepage": "https://github.com/magnaar/simple-enum#readme"
+  "homepage": "https://github.com/magnaar/another-enum#readme"
 }

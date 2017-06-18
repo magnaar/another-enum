@@ -1,7 +1,7 @@
 'use strict'
 
 import test from "ava"
-import { Enum } from "../simple-enum"
+import { Enum } from "../another-enum"
 
 test("Forbidden EnumValue names", t => {
     const forbiddenEnumValueNames = [ "get", "getAt", "name", "toString" ]

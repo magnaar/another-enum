@@ -1,7 +1,7 @@
 'use strict'
 
 import test from "ava"
-import { Enum } from "../simple-enum"
+import { Enum } from "../another-enum"
 
 test("Create a new Enum", t => {
     const Colors = Enum.Colors("RED", "GREEN", "BLUE")
