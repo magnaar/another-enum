@@ -4,7 +4,7 @@ import test from "ava"
 import { Enum } from "../another-enum"
 
 test("Forbidden EnumValue names", t => {
-    const forbiddenEnumValueNames = [ "get", "getAt", "name", "toString" ]
+    const forbiddenEnumValueNames = [ "get", "getAt", "hasIn", "in", "index", "name", "toString" ]
     t.plan(forbiddenEnumValueNames.length)
     for (const name of forbiddenEnumValueNames)
         try {

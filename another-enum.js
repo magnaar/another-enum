@@ -1,7 +1,7 @@
 'use strict'
 
 const hidden = Symbol.for("hidden")
-const forbiddenEnumValueNames = [ "get", "getAt", "index", "name", "toString" ]
+const forbiddenEnumValueNames = [ "get", "getAt", "hasIn", "in", "index", "name", "toString" ]
 
 class EnumCreator
 {
@@ -18,9 +18,13 @@ class Enum
         this[hidden] = {
             name: enumName,
             enumValues: [],
-            values: {}
+            values: {},
+            base: (typeof values[0] !== "number" ? NaN : values.shift())
         }
         const addEnumValue = (name, value) => {
+            let oldValue
+            if (! isNaN(this[hidden].base) && typeof value == "string")
+                value = parseInt(value, this[hidden].base)
             if (forbiddenEnumValueNames.includes(name))
                 throw Error(`${enumName}."${name}" as EnumValue name is forbidden`)
             if (this[name])
@@ -33,10 +37,8 @@ class Enum
         if (typeof values[0] == "string")
             values.forEach((v, i) => addEnumValue(v, i))
         else
-        {
             Object.keys(values[0])
                 .forEach(v => addEnumValue(v, values[0][v]))
-        }
     }
 
     get(value)
@@ -47,6 +49,26 @@ class Enum
     getAt(index)
     {
         return this[hidden].enumValues[index]
+    }
+
+    hasIn(value, ...maskComponents)
+    {
+        let mask = 0
+        let maskComponent
+        for (let i = 0; i < maskComponents.length; ++i)
+        {
+            maskComponent = maskComponents[i]
+            if (typeof this[maskComponent] === "string")
+                maskComponent = this[maskComponent]
+            mask |= maskComponent
+        }
+        return (value & mask) === mask
+    }
+
+    in(value)
+    {
+        return this[hidden].enumValues
+            .filter(ev => (ev & value) === +ev)
     }
 
     get name()
@@ -61,8 +83,9 @@ class Enum
 
     *[Symbol.iterator]()
     {
-        for (const prop of this[hidden].enumValues)
-            yield prop
+        let length = this[hidden].enumValues.length
+        for (let i = 0; i < length; ++i)
+            yield this[hidden].enumValues[i]
     }
 
     get [Symbol.toStringTag]()
@@ -84,6 +107,7 @@ class EnumValue
             name,
             value,
             index: parent[hidden].enumValues.length,
+            parent: parent,
             longName: `${parent.name}.${name}`
         }
     }
@@ -108,6 +132,11 @@ class EnumValue
         return this[hidden].index
     }
 
+    isIn(value)
+    {
+        return (this.value & value) === this.value
+    }
+
     [Symbol.toPrimitive](hint)
     {
         if (hint == "number")
@@ -122,7 +151,24 @@ class EnumValue
 
     toString()
     {
-        return `${this[hidden].longName}(${this.value})`
+        const base = this[hidden].parent[hidden].base
+        let value = this.value
+        let basePrefix = (base == 10 || isNaN(base) ? '' : base + ":")
+        if (! this[hidden].valueString)
+        {
+            if (base == 10 || isNaN(base))
+                this[hidden].valueString = this.value.toString()
+            else
+            {
+                const length = Math.max(...Object.keys(this[hidden].parent[hidden].values)
+                    .map(k => (+k).toString(base).length))
+                value = this.value.toString(base).toUpperCase()
+                value = "0".repeat(length - value.length) + value
+                this[hidden].valueString = value
+                basePrefix = base + ":"
+            }
+        }
+        return `${this[hidden].longName}(${basePrefix}${this[hidden].valueString})`
     }
 }
 

@@ -156,3 +156,134 @@ test("Switch case", t => {
                 t.fail()
         }
 })
+
+test("Base 16 Enum values toString", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    t.is(Colors.RED.toString(), "Colors.RED(16:FF0000)")
+    t.is(Colors.GREEN.toString(), "Colors.GREEN(16:00FF00)")
+    t.is(Colors.BLUE.toString(), "Colors.BLUE(16:0000FF)")
+})
+
+test("Base 16 string Enum values toString", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 'FF0000',
+        GREEN: '0x00FF00',
+        BLUE: '0000FF'
+    })
+    t.is(Colors.RED.toString(), "Colors.RED(16:FF0000)")
+    t.is(Colors.GREEN.toString(), "Colors.GREEN(16:00FF00)")
+    t.is(Colors.BLUE.toString(), "Colors.BLUE(16:0000FF)")
+})
+
+test("Base 2 Enum values toString", t => {
+    const Colors = Enum.Colors(2, {
+        RED: '100',
+        GREEN: '010',
+        BLUE: '001'
+    })
+    t.is(Colors.RED.toString(), "Colors.RED(2:100)")
+    t.is(Colors.GREEN.toString(), "Colors.GREEN(2:010)")
+    t.is(Colors.BLUE.toString(), "Colors.BLUE(2:001)")
+})
+
+test("Base 16 Enum values toString full int", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000FF,
+        GREEN: 0x00FF00FF,
+        BLUE: 0x0000FFFF
+    })
+    t.is(Colors.RED.toString(), "Colors.RED(16:FF0000FF)")
+    t.is(Colors.GREEN.toString(), "Colors.GREEN(16:00FF00FF)")
+    t.is(Colors.BLUE.toString(), "Colors.BLUE(16:0000FFFF)")
+})
+
+test("Base 16 Enum values toString full int", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000FF,
+        GREEN: 0x00FF00FF,
+        BLUE: 0x0000FFFF
+    })
+    t.is(Colors.RED.toString(), "Colors.RED(16:FF0000FF)")
+    t.is(Colors.GREEN.toString(), "Colors.GREEN(16:00FF00FF)")
+    t.is(Colors.BLUE.toString(), "Colors.BLUE(16:0000FFFF)")
+})
+
+test("Bitmask composing", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    t.is(Colors.RED | Colors.GREEN, 0xFFFF00)
+})
+
+test("Bitmask decomposing", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    t.is((0xFFFF00 & Colors.RED) === +Colors.RED, true)
+})
+
+test("Bitmask checking one component", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    const value = 0xFFFF00
+    t.is(Colors.RED.isIn(value), true)
+    t.is(Colors.BLUE.isIn(value), false)
+})
+
+test("Bitmask checking multiple components (EnumValue)", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    const value = 0xFFFF00
+    t.is(Colors.hasIn(value, Colors.RED, Colors.GREEN), true)
+    t.is(Colors.hasIn(value, Colors.RED, Colors.BLUE), false)
+})
+
+test("Bitmask checking multiple components (number)", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    const value = 0xFFFF00
+    t.is(Colors.hasIn(value, 0xFF0000, 0x00FF00), true)
+})
+
+test("Bitmask checking multiple components (string)", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    const value = 0xFFFF00
+    t.is(Colors.hasIn(value, "RED", "GREEN"), true)
+})
+
+test("Bitmask getting components", t => {
+    const Colors = Enum.Colors(16, {
+        RED: 0xFF0000,
+        GREEN: 0x00FF00,
+        BLUE: 0x0000FF
+    })
+    const value = 0xFFFF00
+    const expected = [Colors.RED, Colors.GREEN]
+    t.plan(2)
+    for (const color of Colors.in(value))
+    {
+        t.is(expected.includes(color), true)
+        delete expected[color]
+    }
+})
