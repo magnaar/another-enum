@@ -67,17 +67,17 @@ SimpleHexaColors.GREEN.toString() // => 'SimpleHexaColors.GREEN(65280)'
 
 ###**And simply use it**
 ```
-const OtherColors = Enum.OtherColors("RED", "GREEN", "BLUE")
+const OtherColors = Enum.OtherColors('RED', 'GREEN', 'BLUE')
 
 // true
-Colors.RED == "RED"
-Colors.RED.name ==/= "RED"
+Colors.RED == 'RED'
+Colors.RED.name ==/= 'RED'
  + Colors.RED ==/= 0
 Colors.RED.value ==/= 0
 Colors.BLUE.name ==/= OtherColors.BLUE.name
 
 // false
-Colors.RED === "RED"
+Colors.RED === 'RED'
 Colors.RED ==/= 0
 Colors.BLUE ==/= OtherColors.BLUE
 ```
@@ -87,21 +87,21 @@ Colors.BLUE ==/= OtherColors.BLUE
 switch (color)
 {
     case Colors.RED:
-        console.log("The color is red.")
+        console.log('The color is red.')
         break
     case Colors.GREEN:
-        console.log("The color is green.")
+        console.log('The color is green.')
         break
     case Colors.BLUE:
-        console.log("The color is blue.")
+        console.log('The color is blue.')
         break
     default:
-        console.log("The color is weird.")
+        console.log('The color is weird.')
 }
 ```
 
 ###**Bitmask**
-####**Checking a component is in the mask**
+####**Checking if a component is in the mask**
 ```
 const yellowMask = Colors.RED | Colors.GREEN
 
@@ -112,7 +112,7 @@ if (Colors.RED.isIn(yellowMask))
 	console.log('there is RED in yellow')
 ```
 
-####**Checking several components are in the mask**
+####**Checking if several components are in the mask**
 ```
 const whiteMask = Colors.RED | Colors.GREEN | Colors.BLUE
 
@@ -163,9 +163,9 @@ HexaColors.in(value) // [HexaColors.RED, HexaColors.GREEN]
 
 ####**name**
 ```
-Colors.name // "Colors"
-HexaColors.name // "HexaColors"
-CssColors.name // "CssColors"
+Colors.name // 'Colors'
+HexaColors.name // 'HexaColors'
+CssColors.name // 'CssColors'
 ```
 
 ####**iterate**
@@ -178,9 +178,9 @@ for (const color of Colors)
     ;
 for (const color in Colors)
     // color : string
-    // | "RED"
-    // | "GREEN"
-    // | "BLUE"
+    // | 'RED'
+    // | 'GREEN'
+    // | 'BLUE'
     ;
 ```
 
@@ -202,23 +202,23 @@ HexaColors.BLUE.isIn(value) // false
 
 ####**longName**
 ```
-Colors.RED.longName // "Colors.RED"
-HexaColors.RED.longName // "HexaColors.RED"
-CssColors.RED.longName // "CssColors.RED"
+Colors.RED.longName // 'Colors.RED'
+HexaColors.RED.longName // 'HexaColors.RED'
+CssColors.RED.longName // 'CssColors.RED'
 ```
 
 ####**name**
 ```
-Colors.RED.name // "RED"
-HexaColors.RED.name // "RED"
-CssColors.RED.name // "RED"
+Colors.RED.name // 'RED'
+HexaColors.RED.name // 'RED'
+CssColors.RED.name // 'RED'
 ```
 
 ####**value**
 ```
 Colors.RED.value // 0
 HexaColors.RED.value // 0xFF0000
-CssColors.RED.value // "#FF0000"
+CssColors.RED.value // '#FF0000'
 ```
 
 ###**/!\\** You should always either capitalize or uppercase all your enum values. This allow to avoid shadowing methods on them or get an error at your face. 
@@ -237,8 +237,8 @@ You can't add twice the same name/value in an Enum.
 It will throw an error
 ```
 // "RED" is already defined in "Colors"
-Enum.Colors("RED", "RED", "BLUE")
+Enum.Colors('RED', 'RED', 'BLUE')
 
 // The value "16711680" is already used for "Colors.RED"
-Enum.Colors({RED: 0xFF0000, GREEN: 0xFF0000, BLUE: 0x0000FF })
+Enum.Colors(16, {RED: 0xFF0000, GREEN: 0xFF0000, BLUE: 0x0000FF })
 ```
