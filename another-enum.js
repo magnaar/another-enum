@@ -1,14 +1,53 @@
 'use strict'
 
 const hidden = Symbol.for("hidden")
-const forbiddenEnumValueNames = [ "get", "getAt", "hasIn", "in", "index", "name", "toString" ]
+const forbiddenEnumNames = [ "parse" ]
+const forbiddenEnumValueNames = [ "get", "getAt", "hasIn", "in", "index", "name", "parse", "toJSON", "toString" ]
 
 class EnumCreator
 {
     get(target, name)
     {
+        if (this[name])
+            return this[name]
         return (...args) => new Enum(name, args)
     }
+
+    parse(string)
+    {
+        let obj = JSON.parse(string)
+        let params = []
+        const name = Object.keys(obj)[0]
+        obj = obj[name]
+        if (obj.base)
+            params.push(obj.base)
+        if (obj.values instanceof Array)
+            params = [...params, ...obj.values]
+        else
+            params = [...params, obj.values]
+        return new Enum(name, params)
+    }
+}
+
+function addEnumValue(thisEnum, enumName, name, value)
+{
+    let oldValue
+    if (! isNaN(thisEnum[hidden].base) && typeof value == "string")
+        value = parseInt(value, thisEnum[hidden].base)
+    if (forbiddenEnumValueNames.includes(name))
+        throw Error(`${enumName}."${name}" as EnumValue name is forbidden`)
+    if (thisEnum[name])
+        throw Error(`"${name}" is already defined in "${enumName}"`)
+    if (thisEnum[hidden].values[value])
+    {
+        const enumValue = thisEnum[hidden].values[value]
+        const base = isNaN(thisEnum[hidden].base) || thisEnum[hidden].base === 10
+            ? ""
+            : thisEnum[hidden].base + ":"
+        throw Error(`The value "${base}${enumValue.stringValue}" is already used for "${enumName}.${enumValue}"`)
+    }
+    thisEnum[hidden].enumValues.push(thisEnum[name] = new EnumValue(thisEnum, name, value))
+    thisEnum[hidden].values[value] = thisEnum[name]
 }
 
 class Enum
@@ -21,24 +60,21 @@ class Enum
             values: {},
             base: (typeof values[0] !== "number" ? NaN : values.shift())
         }
-        const addEnumValue = (name, value) => {
-            let oldValue
-            if (! isNaN(this[hidden].base) && typeof value == "string")
-                value = parseInt(value, this[hidden].base)
-            if (forbiddenEnumValueNames.includes(name))
-                throw Error(`${enumName}."${name}" as EnumValue name is forbidden`)
-            if (this[name])
-                throw Error(`"${name}" is already defined in "${enumName}"`)
-            if (this[hidden].values[value])
-                throw Error(`The value "${value}" is already used for "${enumName}.${this[hidden].values[value]}"`)
-            this[hidden].enumValues.push(this[name] = new EnumValue(this, name, value))
-            this[hidden].values[value] = this[name]
-        }
         if (typeof values[0] == "string")
-            values.forEach((v, i) => addEnumValue(v, i))
+            values.forEach((v, i) => addEnumValue(this, enumName, v, i))
         else
             Object.keys(values[0])
-                .forEach(v => addEnumValue(v, values[0][v]))
+                .forEach(v => addEnumValue(this, enumName, v, values[0][v]))
+    }
+
+    get name()
+    {
+        return this[hidden].name
+    }
+
+    get length()
+    {
+        return this[hidden].enumValues.length
     }
 
     get(value)
@@ -71,14 +107,10 @@ class Enum
             .filter(ev => (ev & value) === +ev)
     }
 
-    get name()
+    parse(string)
     {
-        return this[hidden].name
-    }
-
-    get length()
-    {
-        return this[hidden].enumValues.length
+        return this[hidden].enumValues
+            .find(ev => ev.longName === string || JSON.stringify(ev) === string) || null
     }
 
     *[Symbol.iterator]()
@@ -96,6 +128,22 @@ class Enum
     toString()
     {
         return `${this.name}(${Object.keys(this).join("|")})`
+    }
+
+    toJSON()
+    {
+        const isSimpleValues = this[hidden].enumValues.every(ev => ev.value === ev.index)
+        let values = {}
+        if (isSimpleValues)
+            values = this[hidden].enumValues.map(ev => ev.name)
+        else
+            this[hidden].enumValues.forEach(ev => (values[ev.name] = ev.stringValue))
+        return {
+            [this.name]: {
+                base: (isNaN(this[hidden].base) ? void 0 : this[hidden].base),
+                values
+            }
+        }
     }
 }
 
@@ -127,6 +175,25 @@ class EnumValue
         return this[hidden].value
     }
 
+    get stringValue()
+    {
+        if (! this[hidden].stringValue)
+        {
+            const base = this[hidden].parent[hidden].base
+            if (base == 10 || isNaN(base))
+                this[hidden].stringValue = this.value.toString()
+            else
+            {
+                const length = Math.max(...Object.keys(this[hidden].parent[hidden].values)
+                    .map(k => (+k).toString(base).length))
+                let value = this.value.toString(base).toUpperCase()
+                value = "0".repeat(length - value.length) + value
+                this[hidden].stringValue = value
+            }
+        }
+        return this[hidden].stringValue
+    }
+
     get index()
     {
         return this[hidden].index
@@ -135,6 +202,11 @@ class EnumValue
     isIn(value)
     {
         return (this.value & value) === this.value
+    }
+
+    toJSON()
+    {
+        return this.longName
     }
 
     [Symbol.toPrimitive](hint)
@@ -152,23 +224,8 @@ class EnumValue
     toString()
     {
         const base = this[hidden].parent[hidden].base
-        let value = this.value
         let basePrefix = (base == 10 || isNaN(base) ? '' : base + ":")
-        if (! this[hidden].valueString)
-        {
-            if (base == 10 || isNaN(base))
-                this[hidden].valueString = this.value.toString()
-            else
-            {
-                const length = Math.max(...Object.keys(this[hidden].parent[hidden].values)
-                    .map(k => (+k).toString(base).length))
-                value = this.value.toString(base).toUpperCase()
-                value = "0".repeat(length - value.length) + value
-                this[hidden].valueString = value
-                basePrefix = base + ":"
-            }
-        }
-        return `${this[hidden].longName}(${basePrefix}${this[hidden].valueString})`
+        return `${this[hidden].longName}(${basePrefix}${this.stringValue})`
     }
 }
 

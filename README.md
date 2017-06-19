@@ -2,6 +2,11 @@
 =================
 ###_Another enum module, nothing more_
 
+---
+[![NPM](https://nodei.co/npm/another-enum.png)](https://nodei.co/npm/another-enum/)
+
+---
+
 ##**Install**
 ```
 npm install another-enum
