@@ -5,6 +5,8 @@
 ---
 [![NPM](https://nodei.co/npm/another-enum.png)](https://nodei.co/npm/another-enum/)
 
+[![](https://img.shields.io/badge/version-0.0.3-blue.svg)]() [![](https://img.shields.io/badge/build-passing-brightgreen.svg)]() [![](https://img.shields.io/badge/tests-44%2F44-brightgreen.svg)]() [![](https://img.shields.io/badge/dependencies-none-brightgreen.svg)]()
+
 ---
 
 ##**Install**
@@ -135,7 +137,7 @@ const magentaMask = Colors.RED | Colors.BLUE
 
 // You can do whatever loop to extract the components
 // Or
-Colors.in(magentaMask) // => [ Colors.RED, Colors.BLUE ]
+Colors.in(magentaMask)
 ```
 
 ###**Serialize**
@@ -145,39 +147,23 @@ JSON.stringify(Colors.RED) // => '"Colors.RED"'
 ```
 ####**A whole enum**
 ```
-const Colors = Enum.Colors('RED', 'GREEN', 'BLUE')
+const Colors = Enum.Colors("RED", "GREEN", "BLUE")
 JSON.stringify(Colors)
 // => '{"Colors":{"values":["RED","GREEN","BLUE"]}}'
 
-const DecColors = Enum.DecColors(10, {
-    'RED': 0xFF0000,
-    'GREEN': 0x00FF00,
-    'BLUE': 0x0000FF
-})
+const DecColors = Enum.DecColors(10, {"RED":0xFF0000, "GREEN":0x00FF00, "BLUE":0x0000FF})
 JSON.stringify(DecColors)
 // => '{"DecColors":{"base":10,"values":{"RED":"16711680","GREEN":"65280","BLUE":"255"}}}'
 
-const HexaColors = Enum.HexaColors(16, {
-    'RED': 0xFF0000,
-    'GREEN': 0x00FF00,
-    'BLUE': 0x0000FF
-})
+const HexaColors = Enum.HexaColors(16, {"RED":0xFF0000, "GREEN":0x00FF00, "BLUE":0x0000FF})
 JSON.stringify(HexaColors)
 // => '{"HexaColors":{"base":16,"values":{"RED":"FF0000","GREEN":"00FF00","BLUE":"0000FF"}}}'
 
-const BinColors = Enum.BinColors(2, {
-    'RED': '100',
-    'GREEN': '010',
-    'BLUE': '001'
-})
+const BinColors = Enum.BinColors(2, {"RED":"100", "GREEN":"010", "BLUE":"001"})
 JSON.stringify(BinColors)
 // => '{"BinColors":{"base":2,"values":{"RED":"100","GREEN":"010","BLUE":"001"}}}'
 
-const CssColors = Enum.CssColors({
-    RED: '#FF0000',
-    GREEN: '#00FF00',
-    BLUE: '#0000FF'
-})
+const CssColors = Enum.CssColors({RED: '#FF0000', GREEN: '#00FF00', BLUE: '#0000FF'})
 JSON.stringify(CssColors)
 // => '{"CssColors":{"values":{"RED":"#FF0000","GREEN":"#00FF00","BLUE":"#0000FF"}}}'
 ```
@@ -202,7 +188,7 @@ const HexaColors = Enum.parse(serialized) // => Enum HexaColors { "RED": {}, "GR
 ```
 Colors.get(1) // EnumValue GREEN
 HexaColors.get(0x00FF00) // EnumValue GREEN
-CssColors.get('#00FF00') // EnumValue GREEN
+CssColors.get("#00FF00") // EnumValue GREEN
 ```
 
 ####**getAt**(_index_)
@@ -218,12 +204,12 @@ const value = 0xFFFF00
 HexaColors.hasIn(value, Colors.RED, Colors.GREEN) // true
 HexaColors.hasIn(value, Colors.RED, Colors.BLUE) // false
 
-HexaColors.hasIn(value, 'RED', 'GREEN') // true
+HexaColors.hasIn(value, "RED", "GREEN") // true
 HexaColors.hasIn(value, 0xFF0000, 0x00FF00) // true
 
 // You can even mix them
-HexaColors.hasIn(value, 0x00FF00, 'RED') // true
-HexaColors.hasIn(value, Colors.GREEN, 'RED') // true
+HexaColors.hasIn(value, 0x00FF00, "RED") // true
+HexaColors.hasIn(value, Colors.GREEN, "RED") // true
 ```
 
 ####**in**(_value_)
@@ -246,9 +232,9 @@ CssColors.name // 'CssColors'
 
 ####**parse**(_string_)
 ```
-Colors.parse('Colors.RED') // EnumValue RED
-Colors.parse('HexaColors.RED') // null
-Colors.parse('Not an enum value') // null
+Colors.parse("Colors.RED") // EnumValue RED
+Colors.parse("HexaColors.RED") // null
+Colors.parse("Not an enum value") // null
 ```
 
 ####**iterate**
