@@ -1,4 +1,4 @@
-**another-enum** 0.0.2
+**another-enum** 0.0.3
 =================
 ###_Another enum module, nothing more_
 
@@ -138,7 +138,50 @@ const magentaMask = Colors.RED | Colors.BLUE
 Colors.in(magentaMask)
 ```
 
-###**Enum**
+###**Serialize**
+####**Simple value**
+```
+JSON.stringify(Colors.RED) // => '"Colors.RED"'
+```
+####**A whole enum**
+```
+const Colors = Enum.Colors("RED", "GREEN", "BLUE")
+JSON.stringify(Colors)
+// => '{"Colors":{"values":["RED","GREEN","BLUE"]}}'
+
+const DecColors = Enum.DecColors(10, {"RED":0xFF0000, "GREEN":0x00FF00, "BLUE":0x0000FF})
+JSON.stringify(DecColors)
+// => '{"DecColors":{"base":10,"values":{"RED":"16711680","GREEN":"65280","BLUE":"255"}}}'
+
+const HexaColors = Enum.HexaColors(16, {"RED":0xFF0000, "GREEN":0x00FF00, "BLUE":0x0000FF})
+JSON.stringify(HexaColors)
+// => '{"HexaColors":{"base":16,"values":{"RED":"FF0000","GREEN":"00FF00","BLUE":"0000FF"}}}'
+
+const BinColors = Enum.BinColors(2, {"RED":"100", "GREEN":"010", "BLUE":"001"})
+JSON.stringify(BinColors)
+// => '{"BinColors":{"base":2,"values":{"RED":"100","GREEN":"010","BLUE":"001"}}}'
+
+const CssColors = Enum.CssColors({RED: '#FF0000', GREEN: '#00FF00', BLUE: '#0000FF'})
+JSON.stringify(CssColors)
+// => '{"CssColors":{"values":{"RED":"#FF0000","GREEN":"#00FF00","BLUE":"#0000FF"}}}'
+```
+
+###**Deserialize**
+####**Simple value**
+```
+const serialized = '"Colors.RED"' // Or 'Colors.RED'
+// Obviously Colors has to be defined first
+const RED = Colors.parse(serialized) // => EnumValue RED
+```
+
+####**A whole Enum**
+```
+// This or any string in the serialize section
+const serialized = '{"HexaColors":{"base":16,"values":{"RED":"FF0000","GREEN":"00FF00","BLUE":"0000FF"}}}'
+const HexaColors = Enum.parse(serialized) // => Enum HexaColors { "RED": {}, "GREEN": {}, "BLUE": {} }
+```
+
+###**Enum** _(returned by Enum.YourName(...))_
 ####**get**(_value_)
 ```
 Colors.get(1) // EnumValue GREEN
@@ -153,17 +196,29 @@ HexaColors.getAt(2) // EnumValue BLUE
 CssColors.getAt(2) // EnumValue BLUE
 ```
 
-####**hasIn**
+####**hasIn**(_mask, ...[enumValues|names|values])
 ```
 const value = 0xFFFF00
 HexaColors.hasIn(value, Colors.RED, Colors.GREEN) // true
 HexaColors.hasIn(value, Colors.RED, Colors.BLUE) // false
+
+HexaColors.hasIn(value, "RED", "GREEN") // true
+HexaColors.hasIn(value, 0xFF0000, 0x00FF00) // true
+
+// You can even mix them
+HexaColors.hasIn(value, 0x00FF00, "RED") // true
+HexaColors.hasIn(value, Colors.GREEN, "RED") // true
 ```
 
-####**in**
+####**in**(_value_)
 ```
 const value = 0xFFFF00
 HexaColors.in(value) // [HexaColors.RED, HexaColors.GREEN]
+```
+
+####**length**
+```
+HexaColors.length // 3
 ```
 
 ####**name**
@@ -171,6 +226,13 @@ HexaColors.in(value) // [HexaColors.RED, HexaColors.GREEN]
 Colors.name // 'Colors'
 HexaColors.name // 'HexaColors'
 CssColors.name // 'CssColors'
+```
+
+####**parse**(_string_)
+```
+Colors.parse("Colors.RED") // EnumValue RED
+Colors.parse("HexaColors.RED") // null
+Colors.parse("Not an enum value") // null
 ```
 
 ####**iterate**
@@ -197,7 +259,7 @@ HexaColors.RED.index // 0
 CssColors.RED.index // 0
 ```
 
-####**isIn**
+####**isIn**(_mask_)
 ```
 const value = 0xFFFF00
 HexaColors.RED.isIn(value) // true
@@ -219,14 +281,23 @@ HexaColors.RED.name // 'RED'
 CssColors.RED.name // 'RED'
 ```
 
+####**stringValue**
+```
+Colors.RED.stringValue // '0'
+HexaColors.RED.stringValue // 'FF0000'
+CssColors.RED.stringValue // '#FF0000'
+BinColors.RED.stringValue // '100'
+```
+
 ####**value**
 ```
 Colors.RED.value // 0
-HexaColors.RED.value // 0xFF0000
+HexaColors.RED.value // 16711680
 CssColors.RED.value // '#FF0000'
+BinColors.RED.value // 4
 ```
 
-###**/!\\** You should always either capitalize or uppercase all your enum values. This allow to avoid shadowing methods on them or get an error at your face. 
+###**/!\\** You should always either capitalize or uppercase all your enum/values. This allow to avoid shadowing methods on them or get an error at your face. 
 
 ####For safety sake, these names are forbidden for enum values:
     . get
@@ -235,6 +306,8 @@ CssColors.RED.value // '#FF0000'
     . in
     . index
     . name
+    . stringValue
+    . toJSON
     . toString
 _They will throw an error if you use them_
 

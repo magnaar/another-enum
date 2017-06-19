@@ -1,8 +1,7 @@
 'use strict'
 
 const hidden = Symbol.for("hidden")
-const forbiddenEnumNames = [ "parse" ]
-const forbiddenEnumValueNames = [ "get", "getAt", "hasIn", "in", "index", "name", "parse", "toJSON", "toString" ]
+const forbiddenEnumValueNames = [ "get", "getAt", "hasIn", "in", "index", "name", "parse", "stringValue", "toJSON", "toString" ]
 
 class EnumCreator
 {
@@ -31,13 +30,12 @@ class EnumCreator
 
 function addEnumValue(thisEnum, enumName, name, value)
 {
-    let oldValue
-    if (! isNaN(thisEnum[hidden].base) && typeof value == "string")
-        value = parseInt(value, thisEnum[hidden].base)
     if (forbiddenEnumValueNames.includes(name))
         throw Error(`${enumName}."${name}" as EnumValue name is forbidden`)
     if (thisEnum[name])
         throw Error(`"${name}" is already defined in "${enumName}"`)
+    if (! isNaN(thisEnum[hidden].base) && typeof value == "string")
+        value = parseInt(value, thisEnum[hidden].base)
     if (thisEnum[hidden].values[value])
     {
         const enumValue = thisEnum[hidden].values[value]
