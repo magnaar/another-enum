@@ -1,4 +1,4 @@
-**another-enum** 0.0.3
+**another-enum** 0.0.4
 =================
 ###_Another enum module, nothing more_
 

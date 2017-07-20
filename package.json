@@ -1,11 +1,11 @@
 {
   "name": "another-enum",
-  "version": "0.0.4",
+  "version": "0.0.4t1",
   "description": "Another enum module, nothing more",
   "main": "another-enum.js",
   "scripts": {
     "test": "ava",
-    "test:install": "git submodule update -i -r"
+    "test:install": "git clone https://github.com/magnaar/another-enum-test.git test"
   },
   "keywords": [
     "enum"
