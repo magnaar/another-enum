@@ -14,6 +14,11 @@
 npm install another-enum
 ```
 
+##**Install tests**
+```
+npm run test:install
+```
+
 ##**How does it work ?**
 ###**Import**
 ```
