@@ -4,7 +4,8 @@
   "description": "Another enum module, nothing more",
   "main": "another-enum.js",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "test:install": "git submodule update -i -r"
   },
   "keywords": [
     "enum"
