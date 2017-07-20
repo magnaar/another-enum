@@ -1,6 +1,6 @@
 {
   "name": "another-enum",
-  "version": "0.0.4t1",
+  "version": "0.0.4-t2",
   "description": "Another enum module, nothing more",
   "main": "another-enum.js",
   "scripts": {

@@ -16,7 +16,11 @@ npm install another-enum
 
 ##**Install tests**
 ```
+// Go into the another-enum directory node_modules/another-enum
+// type:
+npm install
 npm run test:install
+npm test
 ```
 
 ##**How does it work ?**
